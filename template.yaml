@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: todo-app
+
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+    Runtime: python3.9
+    Handler: app.lambda_handler
+
+Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: TodoListApi
+      Description: API Gateway for the Todo List Application
+      StageName: Prod
+      TracingEnabled: true
+      MethodSettings:
+        - DataTraceEnabled: true
+          MetricsEnabled: true
+          # LoggingLevel: "INFO"
+          HttpMethod: "*"
+          ResourcePath: "/*"
+
+  DynamoDBDatabase:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "item_id"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "item_id"
+          KeyType: "HASH"
+      BillingMode: PAY_PER_REQUEST
+      TableName: Todos
+
+  CreateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/create_todo/
+      Policies:
+        - Statement:
+            - Sid: CreatePolicy
+              Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        CreateTodo:
+          Type: Api
+          Properties:
+            Path: /todo-list/create
+            Method: post
+            RestApiId: !Ref ApiGateway
+
+  UpdateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/update_todo/
+      Policies:
+        - Statement:
+            - Sid: UpdatePolicy
+              Effect: Allow
+              Action:
+                - dynamodb:UpdateItem
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        UpdateTodo:
+          Type: Api
+          Properties:
+            Path: /todo-list/update
+            Method: post
+            RestApiId: !Ref ApiGateway
+
+Outputs:
+  createTodoApi:
+    Description: "API Gateway endpoint URL for Prod stage for Create Todo function"
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/create"

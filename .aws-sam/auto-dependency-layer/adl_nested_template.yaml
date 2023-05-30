@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS SAM CLI Nested Stack for Auto Dependency Layer Creation
+Metadata:
+  SamCliInfo: 1.80.0
+  key: AWS SAM CLI sync command
+Outputs:
+  CreateTodoFunction7c9ee240DepLayer:
+    Value:
+      Ref: CreateTodoFunction7c9ee240DepLayer
+  UpdateTodoFunctionbb2d29eaDepLayer:
+    Value:
+      Ref: UpdateTodoFunctionbb2d29eaDepLayer
+Resources:
+  CreateTodoFunction7c9ee240DepLayer:
+    Metadata:
+      CreatedBy: AWS SAM CLI sync command
+    Properties:
+      CompatibleRuntimes:
+      - python3.9
+      ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/CreateTodoFunction7c9ee240DepLayer
+      Description: Auto created layer for dependencies of function CreateTodoFunction
+      LayerName: todo-app8df0446d-CreateTodoFunction7c9ee240-DepLayer
+      RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
+  UpdateTodoFunctionbb2d29eaDepLayer:
+    Metadata:
+      CreatedBy: AWS SAM CLI sync command
+    Properties:
+      CompatibleRuntimes:
+      - python3.9
+      ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/UpdateTodoFunctionbb2d29eaDepLayer
+      Description: Auto created layer for dependencies of function UpdateTodoFunction
+      LayerName: todo-app8df0446d-UpdateTodoFunctionbb2d29ea-DepLayer
+      RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
+Transform: AWS::Serverless-2016-10-31

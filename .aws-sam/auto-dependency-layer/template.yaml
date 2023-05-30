@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: todo-app
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+    Runtime: python3.9
+    Handler: app.lambda_handler
+Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: TodoListApi
+      Description: API Gateway for the Todo List Application
+      StageName: Prod
+      TracingEnabled: true
+      MethodSettings:
+      - DataTraceEnabled: true
+        MetricsEnabled: true
+        HttpMethod: '*'
+        ResourcePath: /*
+  DynamoDBDatabase:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: item_id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: item_id
+        KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      TableName: Todos
+  CreateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CreateTodoFunction
+      Policies:
+      - Statement:
+        - Sid: CreatePolicy
+          Effect: Allow
+          Action:
+          - dynamodb:PutItem
+          Resource:
+            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        CreateTodo:
+          Type: Api
+          Properties:
+            Path: /todo-list/create
+            Method: post
+            RestApiId:
+              Ref: ApiGateway
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.CreateTodoFunction7c9ee240DepLayer
+    Metadata:
+      SamResourceId: CreateTodoFunction
+  UpdateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: UpdateTodoFunction
+      Policies:
+      - Statement:
+        - Sid: UpdatePolicy
+          Effect: Allow
+          Action:
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        UpdateTodo:
+          Type: Api
+          Properties:
+            Path: /todo-list/update
+            Method: post
+            RestApiId:
+              Ref: ApiGateway
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.UpdateTodoFunctionbb2d29eaDepLayer
+    Metadata:
+      SamResourceId: UpdateTodoFunction
+  AwsSamAutoDependencyLayerNestedStack:
+    DeletionPolicy: Delete
+    Metadata:
+      CreatedBy: AWS SAM CLI sync command
+    Properties:
+      TemplateURL: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/adl_nested_template.yaml
+    Type: AWS::CloudFormation::Stack
+Outputs:
+  createTodoApi:
+    Description: API Gateway endpoint URL for Prod stage for Create Todo function
+    Value:
+      Fn::Sub: https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/create
