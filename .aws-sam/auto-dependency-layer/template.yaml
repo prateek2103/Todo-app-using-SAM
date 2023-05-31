@@ -196,6 +196,32 @@ Resources:
         - Outputs.ListArchiveTodosFunction7e6c3309DepLayer
     Metadata:
       SamResourceId: ListArchiveTodosFunction
+  CompleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CompleteTodoFunction
+      Policies:
+      - Statement:
+        - Sid: CompleteTodoPolicy
+          Effect: Allow
+          Action:
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/complete/{item_id}
+            Method: get
+            RestApiId:
+              Ref: ApiGateway
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.CompleteTodoFunction0ebba516DepLayer
+    Metadata:
+      SamResourceId: CompleteTodoFunction
   AwsSamAutoDependencyLayerNestedStack:
     DeletionPolicy: Delete
     Metadata:

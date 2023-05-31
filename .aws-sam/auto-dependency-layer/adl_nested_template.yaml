@@ -7,6 +7,9 @@ Outputs:
   ArchiveTodoFunction339d52fbDepLayer:
     Value:
       Ref: ArchiveTodoFunction339d52fbDepLayer
+  CompleteTodoFunction0ebba516DepLayer:
+    Value:
+      Ref: CompleteTodoFunction0ebba516DepLayer
   CreateTodoFunction7c9ee240DepLayer:
     Value:
       Ref: CreateTodoFunction7c9ee240DepLayer
@@ -32,6 +35,17 @@ Resources:
       ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/ArchiveTodoFunction339d52fbDepLayer
       Description: Auto created layer for dependencies of function ArchiveTodoFunction
       LayerName: todo-app8df0446d-ArchiveTodoFunction339d52fb-DepLayer
+      RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
+  CompleteTodoFunction0ebba516DepLayer:
+    Metadata:
+      CreatedBy: AWS SAM CLI sync command
+    Properties:
+      CompatibleRuntimes:
+      - python3.9
+      ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/CompleteTodoFunction0ebba516DepLayer
+      Description: Auto created layer for dependencies of function CompleteTodoFunction
+      LayerName: todo-app8df0446d-CompleteTodoFunction0ebba516-DepLayer
       RetentionPolicy: Delete
     Type: AWS::Serverless::LayerVersion
   CreateTodoFunction7c9ee240DepLayer:
