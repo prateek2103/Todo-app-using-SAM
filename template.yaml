@@ -74,6 +74,44 @@ Resources:
             Method: post
             RestApiId: !Ref ApiGateway
 
+  ListTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/list_todos/
+      Policies:
+        - Statement:
+            - Sid: ListPolicy
+              Effect: Allow
+              Action:
+                - dynamodb:Scan
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/list_todos
+            Method: get
+            RestApiId: !Ref ApiGateway
+
+  GetTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/get_todo/
+      Policies:
+        - Statement:
+            - Sid: GetPolicy
+              Effect: Allow
+              Action:
+                - dynamodb:GetItem
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/{item_id}
+            Method: get
+            RestApiId: !Ref ApiGateway
+
 Outputs:
   createTodoApi:
     Description: "API Gateway endpoint URL for Prod stage for Create Todo function"

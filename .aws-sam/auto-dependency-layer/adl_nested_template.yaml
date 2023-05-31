@@ -7,6 +7,12 @@ Outputs:
   CreateTodoFunction7c9ee240DepLayer:
     Value:
       Ref: CreateTodoFunction7c9ee240DepLayer
+  GetTodoFunctione0e209a7DepLayer:
+    Value:
+      Ref: GetTodoFunctione0e209a7DepLayer
+  ListTodoFunction481e4e13DepLayer:
+    Value:
+      Ref: ListTodoFunction481e4e13DepLayer
   UpdateTodoFunctionbb2d29eaDepLayer:
     Value:
       Ref: UpdateTodoFunctionbb2d29eaDepLayer
@@ -20,6 +26,28 @@ Resources:
       ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/CreateTodoFunction7c9ee240DepLayer
       Description: Auto created layer for dependencies of function CreateTodoFunction
       LayerName: todo-app8df0446d-CreateTodoFunction7c9ee240-DepLayer
+      RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
+  GetTodoFunctione0e209a7DepLayer:
+    Metadata:
+      CreatedBy: AWS SAM CLI sync command
+    Properties:
+      CompatibleRuntimes:
+      - python3.9
+      ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/GetTodoFunctione0e209a7DepLayer
+      Description: Auto created layer for dependencies of function GetTodoFunction
+      LayerName: todo-app8df0446d-GetTodoFunctione0e209a7-DepLayer
+      RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
+  ListTodoFunction481e4e13DepLayer:
+    Metadata:
+      CreatedBy: AWS SAM CLI sync command
+    Properties:
+      CompatibleRuntimes:
+      - python3.9
+      ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/ListTodoFunction481e4e13DepLayer
+      Description: Auto created layer for dependencies of function ListTodoFunction
+      LayerName: todo-app8df0446d-ListTodoFunction481e4e13-DepLayer
       RetentionPolicy: Delete
     Type: AWS::Serverless::LayerVersion
   UpdateTodoFunctionbb2d29eaDepLayer:

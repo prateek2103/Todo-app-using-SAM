@@ -2,7 +2,7 @@
 
 [sync_state]
 dependency_layer = true
-latest_infra_sync_time = "2023-05-30T18:26:19.428574"
+latest_infra_sync_time = "2023-05-31T08:22:12.336471"
 
 [resource_sync_states]
 [resource_sync_states."AutoDependencyLayerParentSyncFlow:CreateTodoFunction"]
@@ -12,3 +12,7 @@ sync_time = "2023-05-30T17:59:40.813821"
 [resource_sync_states."AutoDependencyLayerParentSyncFlow:UpdateTodoFunction"]
 hash = "38299f081a761a8a4efc028aacf528b2f85011c4c70ceaa4c46be3913e64b950"
 sync_time = "2023-05-30T18:33:21.065156"
+
+[resource_sync_states."AutoDependencyLayerParentSyncFlow:ListTodoFunction"]
+hash = "6249bf745c0ec123263dfb2d8137720dfc29d136db5f6c4edae50fbf7ed59ac1"
+sync_time = "2023-05-31T08:11:44.166323"

@@ -83,6 +83,58 @@ Resources:
         - Outputs.UpdateTodoFunctionbb2d29eaDepLayer
     Metadata:
       SamResourceId: UpdateTodoFunction
+  ListTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ListTodoFunction
+      Policies:
+      - Statement:
+        - Sid: ListPolicy
+          Effect: Allow
+          Action:
+          - dynamodb:Scan
+          Resource:
+            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/list_todos
+            Method: get
+            RestApiId:
+              Ref: ApiGateway
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.ListTodoFunction481e4e13DepLayer
+    Metadata:
+      SamResourceId: ListTodoFunction
+  GetTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetTodoFunction
+      Policies:
+      - Statement:
+        - Sid: GetPolicy
+          Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          Resource:
+            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/{item_id}
+            Method: get
+            RestApiId:
+              Ref: ApiGateway
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.GetTodoFunctione0e209a7DepLayer
+    Metadata:
+      SamResourceId: GetTodoFunction
   AwsSamAutoDependencyLayerNestedStack:
     DeletionPolicy: Delete
     Metadata:
