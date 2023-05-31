@@ -8,6 +8,10 @@ Globals:
     Runtime: python3.9
     Handler: app.lambda_handler
 Resources:
+  ArchiveBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: todo-list-archive-bucket
   ApiGateway:
     Type: AWS::Serverless::Api
     Properties:
@@ -99,7 +103,7 @@ Resources:
         GetTodos:
           Type: Api
           Properties:
-            Path: /todo-list/list_todos
+            Path: /todo-list/list-todos
             Method: get
             RestApiId:
               Ref: ApiGateway
@@ -135,6 +139,63 @@ Resources:
         - Outputs.GetTodoFunctione0e209a7DepLayer
     Metadata:
       SamResourceId: GetTodoFunction
+  ArchiveTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ArchiveTodoFunction
+      Policies:
+      - Statement:
+        - Sid: GetAndUpdateDbPolicy
+          Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+        - Sid: ArchivePolicy
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: arn:aws:s3:::todo-list-archive-bucket/*
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/archive/{item_id}
+            Method: get
+            RestApiId:
+              Ref: ApiGateway
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.ArchiveTodoFunction339d52fbDepLayer
+    Metadata:
+      SamResourceId: ArchiveTodoFunction
+  ListArchiveTodosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ListArchiveTodosFunction
+      Policies:
+      - Statement:
+        - Sid: GetPolicy
+          Effect: Allow
+          Action:
+          - s3:ListBucket
+          Resource: arn:aws:s3:::todo-list-archive-bucket/*
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/list-archives
+            Method: get
+            RestApiId:
+              Ref: ApiGateway
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.ListArchiveTodosFunction7e6c3309DepLayer
+    Metadata:
+      SamResourceId: ListArchiveTodosFunction
   AwsSamAutoDependencyLayerNestedStack:
     DeletionPolicy: Delete
     Metadata:
