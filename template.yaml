@@ -10,6 +10,34 @@ Globals:
     Handler: app.lambda_handler
 
 Resources:
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: "delete-queue-alarm-notification"
+      TopicName: delete-queue-alarm-topic
+      Subscription:
+        - Protocol: "lambda"
+          Endpoint: !GetAtt DeleteTodoFunction.Arn
+
+  QueueDepthAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Alarm if queue depth increases to more than 10 messages"
+      Namespace: "AWS/SQS"
+      MetricName: "ApproximateNumberOfMessagesVisible"
+      Dimensions:
+        - Name: "QueueName"
+          Value: !GetAtt DeleteQueue.QueueName
+      Statistic: "Sum"
+      Period: "300"
+      EvaluationPeriods: "1"
+      Threshold: "10"
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      AlarmActions:
+        - Ref: "AlarmTopic"
+      InsufficientDataActions:
+        - Ref: "AlarmTopic"
+
   DeleteQueue:
     Type: AWS::SQS::Queue
     Properties:

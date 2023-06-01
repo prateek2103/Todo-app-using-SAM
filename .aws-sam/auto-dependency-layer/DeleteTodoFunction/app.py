@@ -31,7 +31,8 @@ def lambda_handler(event, context):
     queue_url = get_queue_url("/todolist/deletequeue/url")
 
     response = sqs.receive_message(
-        QueueUrl=queue_url
+        QueueUrl=queue_url,
+        MaxNumberOfMessages=10
     )
 
     count = 0
