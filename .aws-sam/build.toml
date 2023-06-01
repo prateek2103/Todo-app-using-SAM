@@ -64,4 +64,22 @@ manifest_hash = "6686853da3491a56c98917cc5c4ddea2"
 packagetype = "Zip"
 functions = ["CompleteTodoFunction"]
 
+[function_build_definitions.982cee01-9398-4855-9eea-2a35145e03f5]
+codeuri = "/Users/prateekpurohit/Desktop/projects/todo-app/src/mark_delete_todo"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "app.lambda_handler"
+manifest_hash = "6686853da3491a56c98917cc5c4ddea2"
+packagetype = "Zip"
+functions = ["MarkDeleteTodoFunction"]
+
+[function_build_definitions.ca544dea-3e55-4a94-97ec-59a1c9983ede]
+codeuri = "/Users/prateekpurohit/Desktop/projects/todo-app/src/delete_todo"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "app.lambda_handler"
+manifest_hash = "6686853da3491a56c98917cc5c4ddea2"
+packagetype = "Zip"
+functions = ["DeleteTodoFunction"]
+
 [layer_build_definitions]

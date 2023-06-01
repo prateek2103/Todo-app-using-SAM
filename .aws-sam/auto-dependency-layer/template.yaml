@@ -8,6 +8,18 @@ Globals:
     Runtime: python3.9
     Handler: app.lambda_handler
 Resources:
+  DeleteQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: delete-todo-queue
+  QueueParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /todolist/deletequeue/url
+      Type: String
+      Value:
+        Ref: DeleteQueue
+      Description: SSM Parameter for the url of the todo list delete queue
   ArchiveBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -222,6 +234,69 @@ Resources:
         - Outputs.CompleteTodoFunction0ebba516DepLayer
     Metadata:
       SamResourceId: CompleteTodoFunction
+  MarkDeleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: MarkDeleteTodoFunction
+      Policies:
+      - Statement:
+        - Sid: TodoQueueAccessPolicy
+          Effect: Allow
+          Action:
+          - sqs:SendMessage
+          Resource:
+            Fn::Sub: arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:delete-todo-queue
+        - Sid: TodoSSMPolicy
+          Effect: Allow
+          Action:
+          - ssm:GetParameter
+          Resource:
+            Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/todolist/deletequeue/url
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/delete/{item_id}
+            Method: get
+            RestApiId:
+              Ref: ApiGateway
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.MarkDeleteTodoFunction5716daadDepLayer
+    Metadata:
+      SamResourceId: MarkDeleteTodoFunction
+  DeleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: DeleteTodoFunction
+      Policies:
+      - Statement:
+        - Sid: TodoQueueAccessPolicy
+          Effect: Allow
+          Action:
+          - sqs:ReceiveMessage
+          - sqs:DeleteMessage
+          Resource:
+            Fn::Sub: arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:delete-todo-queue
+        - Sid: TodoSSMPolicy
+          Effect: Allow
+          Action:
+          - ssm:GetParameter
+          Resource:
+            Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/todolist/deletequeue/url
+        - Sid: UpdatePolicy
+          Effect: Allow
+          Action:
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
+      Layers:
+      - Fn::GetAtt:
+        - AwsSamAutoDependencyLayerNestedStack
+        - Outputs.DeleteTodoFunction19c2e032DepLayer
+    Metadata:
+      SamResourceId: DeleteTodoFunction
   AwsSamAutoDependencyLayerNestedStack:
     DeletionPolicy: Delete
     Metadata:

@@ -13,6 +13,9 @@ Outputs:
   CreateTodoFunction7c9ee240DepLayer:
     Value:
       Ref: CreateTodoFunction7c9ee240DepLayer
+  DeleteTodoFunction19c2e032DepLayer:
+    Value:
+      Ref: DeleteTodoFunction19c2e032DepLayer
   GetTodoFunctione0e209a7DepLayer:
     Value:
       Ref: GetTodoFunctione0e209a7DepLayer
@@ -22,6 +25,9 @@ Outputs:
   ListTodoFunction481e4e13DepLayer:
     Value:
       Ref: ListTodoFunction481e4e13DepLayer
+  MarkDeleteTodoFunction5716daadDepLayer:
+    Value:
+      Ref: MarkDeleteTodoFunction5716daadDepLayer
   UpdateTodoFunctionbb2d29eaDepLayer:
     Value:
       Ref: UpdateTodoFunctionbb2d29eaDepLayer
@@ -59,6 +65,17 @@ Resources:
       LayerName: todo-app8df0446d-CreateTodoFunction7c9ee240-DepLayer
       RetentionPolicy: Delete
     Type: AWS::Serverless::LayerVersion
+  DeleteTodoFunction19c2e032DepLayer:
+    Metadata:
+      CreatedBy: AWS SAM CLI sync command
+    Properties:
+      CompatibleRuntimes:
+      - python3.9
+      ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/DeleteTodoFunction19c2e032DepLayer
+      Description: Auto created layer for dependencies of function DeleteTodoFunction
+      LayerName: todo-app8df0446d-DeleteTodoFunction19c2e032-DepLayer
+      RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
   GetTodoFunctione0e209a7DepLayer:
     Metadata:
       CreatedBy: AWS SAM CLI sync command
@@ -90,6 +107,17 @@ Resources:
       ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/ListTodoFunction481e4e13DepLayer
       Description: Auto created layer for dependencies of function ListTodoFunction
       LayerName: todo-app8df0446d-ListTodoFunction481e4e13-DepLayer
+      RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
+  MarkDeleteTodoFunction5716daadDepLayer:
+    Metadata:
+      CreatedBy: AWS SAM CLI sync command
+    Properties:
+      CompatibleRuntimes:
+      - python3.9
+      ContentUri: /Users/prateekpurohit/Desktop/projects/todo-app/.aws-sam/auto-dependency-layer/MarkDeleteTodoFunction5716daadDepLayer
+      Description: Auto created layer for dependencies of function MarkDeleteTodoFunction
+      LayerName: todo-app8df0446d-MarkDeleteTodoFunction5716daad-DepLayer
       RetentionPolicy: Delete
     Type: AWS::Serverless::LayerVersion
   UpdateTodoFunctionbb2d29eaDepLayer:

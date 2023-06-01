@@ -10,6 +10,19 @@ Globals:
     Handler: app.lambda_handler
 
 Resources:
+  DeleteQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "delete-todo-queue"
+
+  QueueParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/todolist/deletequeue/url"
+      Type: String
+      Value: !Ref DeleteQueue
+      Description: SSM Parameter for the url of the todo list delete queue
+
   ArchiveBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -181,6 +194,56 @@ Resources:
             Path: /todo-list/complete/{item_id}
             Method: get
             RestApiId: !Ref ApiGateway
+
+  MarkDeleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/mark_delete_todo/
+      Policies:
+        - Statement:
+            - Sid: TodoQueueAccessPolicy
+              Effect: Allow
+              Action:
+                - sqs:SendMessage
+              Resource: !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:delete-todo-queue
+
+            - Sid: TodoSSMPolicy
+              Effect: Allow
+              Action:
+                - ssm:GetParameter
+              Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/todolist/deletequeue/url
+      Events:
+        GetTodos:
+          Type: Api
+          Properties:
+            Path: /todo-list/delete/{item_id}
+            Method: get
+            RestApiId: !Ref ApiGateway
+
+  DeleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/delete_todo/
+      Policies:
+        - Statement:
+            - Sid: TodoQueueAccessPolicy
+              Effect: Allow
+              Action:
+                - sqs:ReceiveMessage
+                - sqs:DeleteMessage
+              Resource: !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:delete-todo-queue
+
+            - Sid: TodoSSMPolicy
+              Effect: Allow
+              Action:
+                - ssm:GetParameter
+              Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/todolist/deletequeue/url
+
+            - Sid: UpdatePolicy
+              Effect: Allow
+              Action:
+                - dynamodb:UpdateItem
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
 
 Outputs:
   createTodoApi:
