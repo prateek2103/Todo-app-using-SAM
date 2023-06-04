@@ -274,6 +274,27 @@ Resources:
               Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Todos
 
 Outputs:
-  createTodoApi:
-    Description: "API Gateway endpoint URL for Prod stage for Create Todo function"
+  CreateTodoApi:
+    Description: "API Gateway endpoint URL for Create Todo function"
     Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/create"
+  ListTodosApi:
+    Description: "API Gateway endpoint URL for List Todos function"
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/list-todos"
+  UpdateTodoApi:
+    Description: "API Gateway endpoint URL for Update Todo function"
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/update"
+  CompleteTodoApi:
+    Description: "API Gateway endpoint URL for Complete Todo function"
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/complete/{item_id}"
+  MarkDeleteTodoApi:
+    Description: "API Gateway endpoint URL for Mark Delete Todo function"
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/delete/{item_id}"
+  ArchiveTodoApi:
+    Description: "API Gateway endpoint URL for Archive Todo function"
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/archive/{item_id}"
+  ListArchiveTodoApi:
+    Description: "API Gateway endpoint URL for List archives Todo function"
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/todo-list/list-archives"
+  DeleteQueueURL:
+    Description: "The queue url of the delete queue"
+    Value: !Ref DeleteQueue
